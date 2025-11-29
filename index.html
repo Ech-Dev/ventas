@@ -731,7 +731,8 @@
                 margin-top: 8px;
             }
             
-            .compact-button {
+            /* Estilos específicos para el botón de eliminar producto en móvil */
+            .delete-product-btn.compact-button {
                 width: auto;
                 height: auto;
                 padding: 8px 16px;
@@ -740,11 +741,11 @@
                 color: var(--danger);
             }
             
-            .compact-button i {
+            .delete-product-btn.compact-button i {
                 margin-right: 6px;
             }
             
-            .compact-button::after {
+            .delete-product-btn.compact-button::after {
                 content: "Eliminar";
                 font-size: 0.9rem;
             }
@@ -833,7 +834,9 @@
                                 <label for="profile-select">Perfil activo</label>
                                 <div class="profile-select-control">
                                     <select id="profile-select" class="profile-select"></select>
-                                    <button type="button" id="new-profile-btn" class="ghost-button"><i class="ph ph-plus"></i> Nuevo perfil</button>
+                                    <button type="button" id="edit-profile-btn" class="ghost-button compact-button" title="Renombrar perfil"><i class="ph ph-pencil-simple"></i></button>
+                                    <button type="button" id="delete-profile-btn" class="ghost-button compact-button" title="Eliminar perfil"><i class="ph ph-trash"></i></button>
+                                    <button type="button" id="new-profile-btn" class="ghost-button"><i class="ph ph-plus"></i> Nuevo</button>
                                 </div>
                             </div>
                         </div>
@@ -970,6 +973,8 @@
         const itemsBuyDisplay = document.getElementById('items-buy');
         const profileSelect = document.getElementById('profile-select');
         const newProfileButton = document.getElementById('new-profile-btn');
+        const editProfileButton = document.getElementById('edit-profile-btn');
+        const deleteProfileButton = document.getElementById('delete-profile-btn');
         const toastContainer = document.getElementById('toast-container');
         const toggleFormBtn = document.getElementById('toggle-form-btn');
         const productAddSection = document.getElementById('product-add-section');
@@ -1486,6 +1491,43 @@
             showToast(`Perfil "${name}" creado`, 'user-plus');
         };
 
+        const handleEditProfile = () => {
+            const activeProfile = getActiveProfile();
+            if (!activeProfile) return;
+
+            const newName = prompt('Nuevo nombre para este perfil:', activeProfile.name);
+            if (!newName || newName.trim() === '') return;
+
+            activeProfile.name = sanitizeText(newName, 'Perfil');
+            renderProfileOptions();
+            persistState();
+            showToast('Nombre de perfil actualizado', 'pencil-simple');
+        };
+
+        const handleDeleteProfile = () => {
+            const profileIds = Object.keys(appState.profiles);
+            if (profileIds.length <= 1) {
+                showToast('No puedes eliminar el único perfil existente', 'warning');
+                return;
+            }
+
+            const activeProfile = getActiveProfile();
+            if (!confirm(`¿Estás segura de que quieres eliminar el perfil "${activeProfile.name}"? Se perderán todos los datos de este perfil.`)) {
+                return;
+            }
+
+            delete appState.profiles[appState.activeProfileId];
+            
+            // Switch to the first available profile
+            appState.activeProfileId = Object.keys(appState.profiles)[0];
+            
+            syncProductsReference();
+            renderProfileOptions();
+            renderProducts();
+            persistState();
+            showToast('Perfil eliminado', 'trash');
+        };
+
         const bootstrap = () => {
             appState = loadState();
             refreshIncrementalCounter();
@@ -1504,6 +1546,8 @@
         });
         profileSelect.addEventListener('change', handleProfileChange);
         newProfileButton.addEventListener('click', handleNewProfile);
+        editProfileButton.addEventListener('click', handleEditProfile);
+        deleteProfileButton.addEventListener('click', handleDeleteProfile);
 
         bootstrap();
     </script>
