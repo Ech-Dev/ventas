@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Ventas 💅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables de Color (Girlie Pink Theme) */
+        :root {
+            --pink-light: #FFF0F5;
+            --pink-medium: #FFC0CB;
+            --pink-dark: #E75480;
+            --pink-accent: #FF69B4;
+            --text-primary: #4D1F2B;
+            --card-bg: #FFFFFF;
+            --shadow-color: rgba(231, 84, 128, 0.25);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at top, rgba(255, 192, 203, 0.5), var(--pink-light));
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 20px 60px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 10px;
+            font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+            color: var(--pink-dark);
+            text-shadow: 0 8px 20px var(--shadow-color);
+        }
+
+        .page-header p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 15px 35px var(--shadow-color);
+        }
+
+        .helper-text {
+            margin-bottom: 15px;
+            background: var(--pink-light);
+            border-radius: 14px;
+            padding: 15px;
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+
+        .helper-text strong {
+            color: var(--pink-dark);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(231, 84, 128, 0.15);
+        }
+
+        .input-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .input-table thead {
+            background: rgba(255, 192, 203, 0.35);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .input-table th,
+        .input-table td {
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        .input-table th {
+            font-weight: 700;
+            color: var(--pink-dark);
+            font-size: 0.95rem;
+        }
+
+        @media (min-width: 641px) {
+            .product-row td:not(:first-child) {
+                background: rgba(255, 192, 203, 0.25);
+            }
+        }
+
+        .product-row.active td {
+            background: rgba(255, 105, 180, 0.15);
+            outline: 2px solid rgba(255, 105, 180, 0.4);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-primary);
+            transition: border 0.2s ease, background 0.2s ease;
+            appearance: textfield;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--pink-accent);
+            background: #fff;
+            outline: none;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            appearance: none;
+            margin: 0;
+        }
+
+        .result-cell {
+            font-weight: 700;
+            color: var(--pink-dark);
+            text-align: right;
+        }
+
+        .utility-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 20px;
+            background: linear-gradient(120deg, var(--pink-dark), var(--pink-accent));
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        button:focus-visible {
+            outline: 3px solid rgba(255, 192, 203, 0.8);
+            outline-offset: 3px;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px var(--shadow-color);
+        }
+
+        .summary-panel {
+            position: sticky;
+            top: 20px;
+            align-self: start;
+        }
+
+        .feedback-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 105, 180, 0.12);
+            color: var(--pink-dark);
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 10px 18px;
+            margin-bottom: 18px;
+        }
+
+        .totals-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .total-item {
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .total-item strong {
+            font-size: 1.6rem;
+            color: var(--pink-dark);
+        }
+
+        #half-total-display {
+            background: linear-gradient(135deg, #e33e78, #c2185b);
+            color: white;
+            box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        #half-total-display span,
+        #half-total-display strong {
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255, 240, 245, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-card span {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .stat-card strong {
+            font-size: 1.2rem;
+            color: var(--pink-dark);
+        }
+
+        @media (max-width: 960px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 20px 16px 50px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .helper-text {
+                font-size: 0.9rem;
+            }
+
+            .utility-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            button {
+                width: 100%;
+                text-align: center;
+                padding: 12px 18px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .table-wrapper {
+                border: none;
+                overflow: visible;
+            }
+
+            .input-table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .input-table thead {
+                display: none;
+            }
+
+            .product-row {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                margin-bottom: 16px;
+                padding: 16px;
+                border-radius: 18px;
+                background: rgba(255, 192, 203, 0.35);
+                box-shadow: 0 15px 30px rgba(231, 84, 128, 0.15);
+            }
+
+            .product-row td {
+                padding: 0;
+                background: transparent;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .product-row td::before {
+                content: attr(data-label);
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--pink-dark);
+                margin-bottom: 4px;
+                display: block;
+            }
+
+            .product-row td:first-child {
+                grid-column: 1 / -1;
+                font-size: 1.05rem;
+                font-weight: 700;
+            }
+
+            .product-row .result-cell {
+                grid-column: 1 / -1;
+                justify-self: flex-end;
+                align-items: flex-end;
+                font-size: 1.2rem;
+                margin-top: 8px;
+            }
+
+            input[type="number"] {
+                font-size: 1.05rem;
+                padding: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>💖 Calculadora de Reparto de Ventas 💸</h1>
+            <p>Actualiza cantidades o precios y obtén los totales en tiempo real. Todo queda listo para que compartas tus números al instante.</p>
+        </header>
+
+        <div class="layout-grid">
+            <section class="panel table-panel">
+                <div class="helper-text">
+                    <strong>Cómo usar:</strong> escribe solo la cantidad vendida, puedes modificar los precios si es necesario. Todo se calcula automáticamente. Al iniciar un nuevo día, usa el botón para limpiar las cantidades ❤️.
+                </div>
+
+                <div class="table-wrapper" role="region" aria-label="Listado de productos">
+                    <table class="input-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">Producto</th>
+                                <th style="width: 20%;">P.U. ($)</th>
+                                <th style="width: 25%;">Vendí (Cant.)</th>
+                                <th style="width: 20%; text-align: right;">Total ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list"></tbody>
+                    </table>
+                </div>
+
+                <div class="utility-bar">
+                    <button type="button" id="reset-btn">Limpiar cantidades</button>
+                    <span>Los totales se recalculan automáticamente ✨</span>
+                </div>
+            </section>
+
+            <aside class="panel summary-panel" aria-live="polite">
+                <div class="feedback-badge" id="encouragement">Aún no hay ventas registradas.</div>
+
+                <div class="totals-grid">
+                    <div class="total-item">
+                        <span>GRAN TOTAL DE VENTA</span>
+                        <strong id="grand-total-display">$0</strong>
+                    </div>
+
+                    <div class="total-item" id="half-total-display">
+                        <span>LA MITAD (Para Ti)</span>
+                        <strong id="half-display">$0</strong>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span>Unidades vendidas</span>
+                        <strong id="items-sold">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Ticket promedio</span>
+                        <strong id="avg-ticket">$0</strong>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+    </div>
+
+    <script>
+        // Definición de tus productos con precios predeterminados
+        const initialProducts = [
+            { name: "Imán", price: 1000, sold: 0 },
+            { name: "Encendedores", price: 1000, sold: 0 },
+            { name: "Llaveros", price: 3000, sold: 0 },
+            { name: "Credenciales", price: 2000, sold: 0 },
+            { name: "Pañoletas/Bandanas", price: 3000, sold: 0 },
+            { name: "Cintas", price: 2000, sold: 0 },
+            { name: "Jockeys", price: 5000, sold: 0 },
+            { name: "Abanicos", price: 3000, sold: 0 },
+            { name: "Cachos / Caxos", price: 2000, sold: 0 },
+            { name: "Stickers", price: 1000, sold: 0 } // Precio sugerido
+        ];
+
+        const productList = document.getElementById('product-list');
+        const grandTotalDisplay = document.getElementById('grand-total-display');
+        const halfDisplay = document.getElementById('half-display');
+        const resetButton = document.getElementById('reset-btn');
+        const itemsSoldDisplay = document.getElementById('items-sold');
+        const averageTicketDisplay = document.getElementById('avg-ticket');
+        const encouragementDisplay = document.getElementById('encouragement');
+        const STORAGE_KEY = 'girlie-sales-calculator-v1';
+
+        const loadStoredState = () => {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                return stored ? JSON.parse(stored) : null;
+            } catch (error) {
+                console.warn('No se pudo leer localStorage', error);
+                return null;
+            }
+        };
+
+        const persistState = () => {
+            const snapshot = Array.from(productList.getElementsByClassName('product-row')).map(row => {
+                return {
+                    name: row.querySelector('.product-name').textContent.trim(),
+                    price: parseFloat(row.querySelector('.price-input').value) || 0,
+                    sold: parseFloat(row.querySelector('.sold-input').value) || 0
+                };
+            });
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+            } catch (error) {
+                console.warn('No se pudo guardar en localStorage', error);
+            }
+        };
+
+        const getMergedProducts = () => {
+            const storedState = loadStoredState();
+            if (!storedState) {
+                return [...initialProducts];
+            }
+
+            const storedMap = new Map(storedState.map(item => [item.name, item]));
+            const merged = initialProducts.map(product => {
+                if (storedMap.has(product.name)) {
+                    const stored = storedMap.get(product.name);
+                    storedMap.delete(product.name);
+                    return { ...product, price: stored.price, sold: stored.sold };
+                }
+                return { ...product };
+            });
+
+            storedMap.forEach(value => merged.push({ ...value }));
+            return merged;
+        };
+
+        // Función para formatear números a moneda chilena (o local, sin símbolo)
+        const formatCurrency = (number) => {
+            return '$' + new Intl.NumberFormat('es-CL').format(Math.round(number));
+        };
+
+        // Función principal para calcular y actualizar todos los valores
+        const calculateTotals = () => {
+            let grandTotal = 0;
+            const rows = productList.getElementsByClassName('product-row');
+            let totalUnits = 0;
+            let activeProducts = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const priceInput = row.querySelector('.price-input');
+                const soldInput = row.querySelector('.sold-input');
+                const totalCell = row.querySelector('.total-cell');
+
+                const price = parseFloat(priceInput.value) || 0;
+                const sold = parseFloat(soldInput.value) || 0;
+                
+                // Cálculo: Precio Unitario x Cantidad Vendida
+                const total = price * sold;
+                grandTotal += total;
+                totalUnits += sold;
+
+                if (sold > 0) {
+                    activeProducts += 1;
+                }
+
+                // Actualizar la celda de total por producto
+                totalCell.textContent = formatCurrency(total);
+            }
+
+            // Actualizar el Gran Total y La Mitad
+            grandTotalDisplay.textContent = formatCurrency(grandTotal);
+            halfDisplay.textContent = formatCurrency(grandTotal / 2);
+
+            itemsSoldDisplay.textContent = totalUnits;
+            const averageTicket = totalUnits > 0 ? grandTotal / totalUnits : 0;
+            averageTicketDisplay.textContent = formatCurrency(averageTicket);
+            
+            if (grandTotal === 0) {
+                encouragementDisplay.textContent = 'Tenga un lindo día mi princesa 💖💸.';
+            } else if (grandTotal <= 50000) {
+                encouragementDisplay.textContent = 'Ya va tomando ritmo mi amor, sígale 💪💕.';
+            } else if (grandTotal >= 100000) {
+                encouragementDisplay.textContent = '¡Tienes el dia hecho! Te amo mucho mi niña hermosa 😍🌟.';
+            } else if (grandTotal > 1000000) {
+                encouragementDisplay.textContent = 'CASEMONOS';
+            } else {
+                encouragementDisplay.textContent = 'error, avisale al jeu';
+            }
+        };
+
+        const handleInputUpdate = () => {
+            calculateTotals();
+            persistState();
+        };
+
+        // Función para generar las filas de la tabla
+        const createProductRows = () => {
+            const productsToRender = getMergedProducts();
+            productsToRender.forEach(product => {
+                const row = document.createElement('tr');
+                row.className = 'product-row';
+
+                row.innerHTML = `
+                    <td class="product-name" data-label="Producto">${product.name}</td>
+                    <td data-label="P.U. ($)">
+                        <input type="number" class="price-input" value="${product.price}" min="0" step="100" inputmode="decimal" aria-label="Precio unitario de ${product.name}">
+                    </td>
+                    <td data-label="Vendí (Cant.)">
+                        <input type="number" class="sold-input" value="${product.sold}" min="0" step="1" inputmode="numeric" placeholder="0" aria-label="Cantidad vendida de ${product.name}">
+                    </td>
+                    <td data-label="Total ($)" class="result-cell total-cell">${formatCurrency(product.price * product.sold)}</td>
+                `;
+
+                const priceInput = row.querySelector('.price-input');
+                const soldInput = row.querySelector('.sold-input');
+
+                const toggleActiveState = (isActive) => {
+                    row.classList.toggle('active', isActive);
+                };
+
+                [priceInput, soldInput].forEach(input => {
+                    input.addEventListener('focus', () => toggleActiveState(true));
+                    input.addEventListener('blur', () => toggleActiveState(false));
+                    input.addEventListener('input', handleInputUpdate);
+                });
+
+                productList.appendChild(row);
+            });
+
+            // Llamar a calculateTotals al inicio para mostrar los totales iniciales (cero)
+            calculateTotals();
+            persistState();
+        };
+
+        const resetQuantities = () => {
+            const soldInputs = productList.querySelectorAll('.sold-input');
+            soldInputs.forEach(input => input.value = 0);
+            handleInputUpdate();
+        };
+
+        resetButton.addEventListener('click', resetQuantities);
+
+        // Iniciar la aplicación
+        createProductRows();
+    </script>
+
+</body>
+</html>
