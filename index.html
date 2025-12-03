@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <title>Calculadora de Ventas 💅</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -37,7 +37,11 @@
             background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 100%);
             background-attachment: fixed;
             margin: 0;
+            
+            /* CORRECCIÓN 2: Altura dinámica para móviles */
             min-height: 100vh;
+            min-height: 100dvh; 
+
             padding: 40px 20px 80px;
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
@@ -813,77 +817,97 @@
 
         <div class="layout-grid">
             <section class="panel table-panel">
+      
                 <div class="helper-text" id="helper-text">
                     <button type="button" class="helper-close" id="close-helper-btn" aria-label="Cerrar ayuda">
                         <i class="ph ph-x"></i>
                     </button>
+                 
                     <i class="ph ph-info icon-info"></i>
                     <div>
-                        <strong>Cómo usar:</strong> crea tus productos con su precio de compra y de venta. Usa las pestañas para registrar lo que pagas al proveedor y lo que vendes. Puedes limpiar solo las cantidades o borrar toda la memoria para comenzar desde cero ❤️.
+                        <strong>Cómo usar:</strong> crea tus productos con su precio de compra y de venta.
+                        Usa las pestañas para registrar lo que pagas al proveedor y lo que vendes.
+                        Puedes limpiar solo las cantidades o borrar toda la memoria para comenzar desde cero ❤️.
                     </div>
                 </div>
 
                 <div class="collapsible-card" id="profile-section">
                     <button type="button" class="collapsible-header" id="toggle-profile-btn">
                         <span style="display: flex; align-items: center; gap: 8px;"><i class="ph ph-user-circle"></i> Gestionar Perfiles</span>
+         
                         <i class="ph ph-caret-down arrow"></i>
                     </button>
                     <div class="collapsible-content">
                         <div class="collapsible-inner">
+                
                             <div class="profile-switcher" aria-label="Gestionar perfiles">
                                 <label for="profile-select">Perfil activo</label>
                                 <div class="profile-select-control">
+                  
                                     <select id="profile-select" class="profile-select"></select>
                                     <button type="button" id="edit-profile-btn" class="ghost-button compact-button" title="Renombrar perfil"><i class="ph ph-pencil-simple"></i></button>
+                                    
                                     <button type="button" id="delete-profile-btn" class="ghost-button compact-button" title="Eliminar perfil"><i class="ph ph-trash"></i></button>
                                     <button type="button" id="new-profile-btn" class="ghost-button"><i class="ph ph-plus"></i> Nuevo</button>
                                 </div>
+                  
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="collapsible-card" id="product-add-section">
+            
                     <button type="button" class="collapsible-header" id="toggle-form-btn">
                         <span style="display: flex; align-items: center; gap: 8px;"><i class="ph ph-lightning"></i> Agrega un producto rápido</span>
                         <i class="ph ph-caret-down arrow"></i>
                     </button>
                     <div class="collapsible-content">
+                       
                         <form id="product-form" class="collapsible-inner">
                             <div class="form-grid">
                                 <div class="form-field">
+                                   
                                     <label for="new-product-name">Nombre</label>
                                     <input type="text" id="new-product-name" placeholder="Ej: Pulsera" maxlength="40" required>
                                 </div>
+                        
                                 <div class="form-field">
                                     <label for="new-product-buy-price">Precio compra ($)</label>
                                     <input type="number" id="new-product-buy-price" min="0" step="50" placeholder="0" required>
+          
                                 </div>
                                 <div class="form-field">
                                     <label for="new-product-sell-price">Precio venta ($)</label>
+      
                                     <input type="number" id="new-product-sell-price" min="0" step="50" placeholder="0" required>
                                 </div>
                             </div>
+    
                             <button type="submit"><i class="ph ph-plus-circle"></i> Añadir producto</button>
                         </form>
                     </div>
                 </div>
 
+           
                 <div class="tab-bar" role="tablist" aria-label="Cambiar entre compras y ventas">
                     <button type="button" class="tab-button active" data-tab="sale" role="tab" aria-selected="true"><i class="ph ph-tag"></i> Ventas</button>
                     <button type="button" class="tab-button" data-tab="buy" role="tab" aria-selected="false"><i class="ph ph-shopping-cart"></i> Compras</button>
                 </div>
 
+               
                 <div class="table-wrapper" role="region" aria-label="Listado de productos">
                     <table class="input-table">
                         <thead id="table-head"></thead>
                         <tbody id="product-list"></tbody>
                     </table>
+   
                 </div>
 
                 <div class="utility-bar">
                     <div class="utility-actions">
                         <button type="button" id="reset-btn" class="ghost-button"><i class="ph ph-arrow-counter-clockwise"></i> Limpiar cantidades</button>
+                  
                         <button type="button" id="clear-memory-btn" class="ghost-button danger-button"><i class="ph ph-trash"></i> Borrar memoria</button>
                     </div>
                     <span>Los totales se recalculan automáticamente ✨</span>
@@ -897,31 +921,37 @@
                 </div>
 
                 <div class="totals-grid">
+ 
                     <div class="total-item">
                         <span>Total venta</span>
                         <strong id="sales-total-display">$0</strong>
                     </div>
 
+          
                     <div class="total-item">
                         <span>Total compra</span>
                         <strong id="purchase-total-display">$0</strong>
                     </div>
 
+                   
                     <div class="total-item" id="profit-card">
                         <span>Ganancia neta</span>
                         <strong id="profit-display">$0</strong>
                     </div>
                 </div>
 
+           
                 <div class="stats-grid">
                     <div class="stat-card">
                         <span>Unidades vendidas</span>
                         <strong id="items-sold">0</strong>
                     </div>
+   
                     <div class="stat-card">
                         <span>Unidades por pagar</span>
                         <strong id="items-buy">0</strong>
                     </div>
+           
                 </div>
             </aside>
         </div>
@@ -935,11 +965,13 @@
             sale: {
                 key: 'sale',
                 priceField: 'sellPrice',
+   
                 qtyField: 'sellQty',
                 priceLabel: 'Precio venta ($)',
                 qtyLabel: 'Vendí (Cant.)',
                 totalLabel: 'Total venta ($)',
                 priceClass: 'sell-price-input',
+             
                 qtyClass: 'sell-qty-input'
             },
             buy: {
@@ -947,13 +979,13 @@
                 priceField: 'buyPrice',
                 qtyField: 'buyQty',
                 priceLabel: 'Precio compra ($)',
+ 
                 qtyLabel: 'Compré (Cant.)',
                 totalLabel: 'Total compra ($)',
                 priceClass: 'buy-price-input',
                 qtyClass: 'buy-qty-input'
             }
         };
-
         const STORAGE_KEY = 'girlie-sales-ledger-v2';
 
         const productList = document.getElementById('product-list');
@@ -986,15 +1018,12 @@
         toggleFormBtn.addEventListener('click', () => {
             productAddSection.classList.toggle('open');
         });
-
         toggleProfileBtn.addEventListener('click', () => {
             profileSection.classList.toggle('open');
         });
-
         closeHelperBtn.addEventListener('click', () => {
             helperText.style.display = 'none';
         });
-
         const showToast = (message, icon = 'check-circle') => {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -1004,7 +1033,6 @@
             
             // Trigger reflow
             void toast.offsetWidth;
-            
             toast.classList.add('show');
             
             setTimeout(() => {
@@ -1023,7 +1051,8 @@
         let currentTab = 'sale';
 
         const formatCurrency = (number) => {
-            const safeValue = Number.isFinite(number) ? number : 0;
+            const safeValue = Number.isFinite(number) ?
+            number : 0;
             return '$' + pesosFormatter.format(Math.trunc(safeValue));
         };
 
@@ -1038,18 +1067,17 @@
                 .replace(/\s+/g, '')
                 .replace(/\./g, '')
                 .replace(',', '.');
-
             const parsed = parseFloat(normalized);
             return Number.isFinite(parsed) ? parsed : 0;
         };
-
         const getNumericValue = (input) => {
             if (input === null || input === undefined) {
                 return 0;
             }
 
             if (typeof input === 'number') {
-                return Number.isFinite(input) ? input : 0;
+                return Number.isFinite(input) ?
+                input : 0;
             }
 
             if (typeof input === 'string') {
@@ -1067,7 +1095,6 @@
 
             return 0;
         };
-
         const uniqueId = (prefix) => {
             if (window.crypto?.randomUUID) {
                 return `${prefix}-${crypto.randomUUID()}`;
@@ -1075,13 +1102,11 @@
             incrementalId += 1;
             return `${prefix}-${Date.now()}-${incrementalId}`;
         };
-
         const sanitizeText = (text, fallback = '') => {
             const value = (text ?? fallback ?? '').toString().trim();
             const source = value || fallback || '';
             return source.slice(0, 40) || 'Perfil';
         };
-
         const safeInteger = (value) => Math.max(0, Math.trunc(getNumericValue(value)));
 
         const createProfile = (name) => ({
@@ -1089,7 +1114,6 @@
             name: sanitizeText(name, 'Perfil'),
             products: []
         });
-
         const normalizeProduct = (product, fallbackName = 'Producto') => ({
             id: product.id || uniqueId('prod'),
             name: sanitizeText(product.name, fallbackName),
@@ -1098,7 +1122,6 @@
             buyQty: safeInteger(product.buyQty),
             sellQty: safeInteger(product.sellQty)
         });
-
         const createDefaultState = () => {
             const defaultProfile = createProfile('Perfil principal');
             return {
@@ -1132,13 +1155,14 @@
                     const profileId = profile.id || uniqueId('profile');
                     safeProfiles[profileId] = {
                         id: profileId,
-                        name: sanitizeText(profile.name, 'Perfil'),
+                        name: sanitizeText(profile.name, 
+                        'Perfil'),
                         products: Array.isArray(profile.products)
                             ? profile.products.map(item => normalizeProduct(item, profile.name))
                             : []
+              
                     };
                 });
-
                 if (!Object.keys(safeProfiles).length) {
                     return createDefaultState();
                 }
@@ -1159,7 +1183,6 @@
         };
 
         const getActiveProfile = () => appState.profiles[appState.activeProfileId];
-
         const syncProductsReference = () => {
             const active = getActiveProfile();
             products = active ? active.products : [];
@@ -1177,6 +1200,7 @@
                     <th style="width: 30%;">Producto</th>
                     <th style="width: 18%;">${config.priceLabel}</th>
                     <th style="width: 20%;">${config.qtyLabel}</th>
+                
                     <th style="width: 20%; text-align: right;">${config.totalLabel}</th>
                     <th style="width: 12%; text-align: right;">Acciones</th>
                 </tr>
@@ -1188,23 +1212,25 @@
             let purchaseTotal = 0;
             let unitsSold = 0;
             let unitsBuy = 0;
-
             products.forEach(product => {
                 const saleSubtotal = product.sellPrice * product.sellQty;
                 const buySubtotal = product.buyPrice * product.buyQty;
                 salesTotal += saleSubtotal;
                 purchaseTotal += buySubtotal;
                 unitsSold += product.sellQty;
+  
                 unitsBuy += product.buyQty;
 
                 const row = productList.querySelector(`[data-id="${product.id}"]`);
                 if (row) {
                     const totalCell = row.querySelector('.total-cell');
                     if (totalCell) {
+  
                         const subtotal = currentTab === 'sale' ? saleSubtotal : buySubtotal;
                         totalCell.textContent = formatCurrency(subtotal);
                     }
                 }
+       
             });
 
             const profit = salesTotal - purchaseTotal;
@@ -1217,7 +1243,6 @@
 
             const encouragementText = encouragementDisplay.querySelector('span');
             if (!encouragementText) return;
-
             if (profit <= 0 && salesTotal === 0 && purchaseTotal === 0) {
                 encouragementText.textContent = 'Tenga un lindo día amorcito, empieza agregando tus productos 💖';
             } else if (profit < 0) {
@@ -1277,7 +1302,8 @@
             totalCell.dataset.label = config.totalLabel;
             totalCell.className = 'result-cell total-cell';
             const subtotal = currentTab === 'sale'
-                ? product.sellPrice * product.sellQty
+                ?
+                product.sellPrice * product.sellQty
                 : product.buyPrice * product.buyQty;
             totalCell.textContent = formatCurrency(subtotal);
 
@@ -1296,7 +1322,6 @@
             row.appendChild(qtyCell);
             row.appendChild(totalCell);
             row.appendChild(actionCell);
-
             return row;
         };
 
@@ -1320,7 +1345,6 @@
                 const row = buildRow(product, index);
                 productList.appendChild(row);
             });
-
             calculateTotals();
         };
 
@@ -1394,14 +1418,11 @@
             persistState();
             showToast('Producto eliminado', 'trash');
         };
-
         const addProduct = (event) => {
             event.preventDefault();
-
             const nameValue = nameInput.value.trim();
             const buyPriceValue = safeInteger(buyPriceInput);
             const sellPriceValue = safeInteger(sellPriceInput);
-
             if (!nameValue) {
                 nameInput.focus();
                 return;
@@ -1412,10 +1433,10 @@
                 name: nameValue,
                 buyPrice: buyPriceValue,
                 sellPrice: sellPriceValue,
-                buyQty: 0,
+                buyQty: 
+                0,
                 sellQty: 0
             }, nameValue);
-
             products.push(newProduct);
             productForm.reset();
             nameInput.focus();
@@ -1423,9 +1444,9 @@
             persistState();
             showToast('Producto añadido correctamente', 'check-circle');
         };
-
         const clearMemory = () => {
-            const profileName = getActiveProfile()?.name || 'este perfil';
+            const profileName = getActiveProfile()?.name ||
+            'este perfil';
             const confirmation = confirm(`Vas a borrar toda la memoria y dejar todo en 0 dentro de "${profileName}". ¿Quieres continuar?`);
             if (!confirmation) {
                 return;
@@ -1473,7 +1494,6 @@
             renderProducts();
             persistState();
         };
-
         const handleNewProfile = () => {
             const suggestion = `Perfil ${Object.keys(appState.profiles).length + 1}`;
             const name = prompt('Nombre para el nuevo perfil (ej: Venta concierto)', suggestion);
@@ -1490,20 +1510,17 @@
             persistState();
             showToast(`Perfil "${name}" creado`, 'user-plus');
         };
-
         const handleEditProfile = () => {
             const activeProfile = getActiveProfile();
             if (!activeProfile) return;
 
             const newName = prompt('Nuevo nombre para este perfil:', activeProfile.name);
             if (!newName || newName.trim() === '') return;
-
             activeProfile.name = sanitizeText(newName, 'Perfil');
             renderProfileOptions();
             persistState();
             showToast('Nombre de perfil actualizado', 'pencil-simple');
         };
-
         const handleDeleteProfile = () => {
             const profileIds = Object.keys(appState.profiles);
             if (profileIds.length <= 1) {
@@ -1517,10 +1534,8 @@
             }
 
             delete appState.profiles[appState.activeProfileId];
-            
             // Switch to the first available profile
             appState.activeProfileId = Object.keys(appState.profiles)[0];
-            
             syncProductsReference();
             renderProfileOptions();
             renderProducts();
