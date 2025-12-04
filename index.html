@@ -34,12 +34,14 @@
 
         body {
             font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 100%);
-            background-attachment: fixed;
+            background: #FFF0F5;
             margin: 0;
+            
+            /* CORRECCIÓN 2: Altura dinámica para móviles */
             min-height: 100vh;
             min-height: 100dvh; 
-            padding: 40px 20px 80px;
+
+            padding: 20px 10px 60px;
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
         }
@@ -56,9 +58,8 @@
 
         .page-header h1 {
             margin: 0 0 12px;
-            font-size: clamp(2rem, 3vw, 2.8rem);
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
             color: var(--pink-dark);
-            text-shadow: 0 4px 12px rgba(214, 51, 108, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -81,12 +82,11 @@
         }
 
         .panel {
-            background: var(--card-bg);
+            background: #fff;
             border-radius: var(--radius-lg);
-            padding: 30px;
-            box-shadow: 0 20px 40px var(--shadow-color);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border: 1px solid rgba(214, 51, 108, 0.1);
         }
 
         .helper-text {
@@ -208,39 +208,16 @@
             color: var(--pink-dark);
             font-size: 1.1rem;
             font-weight: 700;
-            cursor: pointer;
+            cursor: default;
             text-align: left;
             box-shadow: none;
             margin: 0;
             border-radius: 0;
         }
-        
-        .collapsible-header:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: none;
-            box-shadow: none;
-        }
-
-        .collapsible-header i.arrow {
-            transition: transform 0.3s ease;
-        }
-
-        .collapsible-card.open .collapsible-header i.arrow {
-            transform: rotate(180deg);
-        }
 
         .collapsible-content {
-            display: none;
-        }
-
-        .collapsible-card.open .collapsible-content {
             display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            opacity: 1;
         }
 
         .collapsible-inner {
@@ -352,25 +329,23 @@
         input[type="text"] {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid transparent;
+            border: 1px solid #ddd;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 16px; /* Evita zoom en iOS */
             background: #fff;
             color: var(--text-primary);
-            transition: all 0.2s ease;
             font-family: inherit;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
         
         .input-table td input {
             background: transparent;
-            box-shadow: none;
+            border: 1px solid transparent;
             padding: 8px 12px;
         }
         
         .input-table td input:hover {
             background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            border-color: #eee;
         }
 
         input[type="number"]:focus,
@@ -378,7 +353,6 @@
             border-color: var(--pink-accent);
             background: #fff;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.15);
         }
 
         .result-cell {
@@ -414,17 +388,15 @@
             border: none;
             border-radius: 999px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, var(--pink-accent), var(--pink-vivid));
+            background: var(--pink-vivid);
             color: white;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             font-size: 0.95rem;
-            box-shadow: 0 4px 12px rgba(255, 20, 147, 0.25);
             font-family: inherit;
         }
         
@@ -434,24 +406,21 @@
 
         .ghost-button {
             background: transparent;
-            border: 2px solid rgba(214, 51, 108, 0.2);
+            border: 1px solid rgba(214, 51, 108, 0.2);
             color: var(--pink-dark);
-            box-shadow: none;
         }
         
         .ghost-button:hover {
             background: rgba(255, 192, 203, 0.2);
             border-color: var(--pink-dark);
-            transform: translateY(-2px);
         }
 
         .danger-button {
-            background: linear-gradient(135deg, #ff6b6b, #fa5252);
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+            background: #ff6b6b;
         }
         
         .danger-button:hover {
-            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.35);
+            background: #fa5252;
         }
 
         .compact-button {
@@ -539,9 +508,8 @@
         }
 
         #profit-card {
-            background: linear-gradient(135deg, #D6336C, #FF1493);
+            background: #D6336C;
             color: white;
-            box-shadow: 0 10px 25px rgba(214, 51, 108, 0.3);
             border: none;
         }
 
@@ -585,7 +553,7 @@
 
             .summary-panel {
                 position: static;
-                order: -1;
+                order: -1; /* Show summary on top on mobile */
             }
             
             .form-grid {
@@ -830,11 +798,9 @@
                 </div>
 
                 <div class="collapsible-card" id="profile-section">
-                    <button type="button" class="collapsible-header" id="toggle-profile-btn">
+                    <div class="collapsible-header">
                         <span style="display: flex; align-items: center; gap: 8px;"><i class="ph ph-user-circle"></i> Gestionar Perfiles</span>
-         
-                        <i class="ph ph-caret-down arrow"></i>
-                    </button>
+                    </div>
                     <div class="collapsible-content">
                         <div class="collapsible-inner">
                 
@@ -856,10 +822,9 @@
 
                 <div class="collapsible-card" id="product-add-section">
             
-                    <button type="button" class="collapsible-header" id="toggle-form-btn">
+                    <div class="collapsible-header">
                         <span style="display: flex; align-items: center; gap: 8px;"><i class="ph ph-lightning"></i> Agrega un producto rápido</span>
-                        <i class="ph ph-caret-down arrow"></i>
-                    </button>
+                    </div>
                     <div class="collapsible-content">
                        
                         <form id="product-form" class="collapsible-inner">
@@ -963,11 +928,13 @@
             sale: {
                 key: 'sale',
                 priceField: 'sellPrice',
+   
                 qtyField: 'sellQty',
                 priceLabel: 'Precio venta ($)',
                 qtyLabel: 'Vendí (Cant.)',
                 totalLabel: 'Total venta ($)',
                 priceClass: 'sell-price-input',
+             
                 qtyClass: 'sell-qty-input'
             },
             buy: {
@@ -975,6 +942,7 @@
                 priceField: 'buyPrice',
                 qtyField: 'buyQty',
                 priceLabel: 'Precio compra ($)',
+ 
                 qtyLabel: 'Compré (Cant.)',
                 totalLabel: 'Total compra ($)',
                 priceClass: 'buy-price-input',
@@ -1003,19 +971,9 @@
         const editProfileButton = document.getElementById('edit-profile-btn');
         const deleteProfileButton = document.getElementById('delete-profile-btn');
         const toastContainer = document.getElementById('toast-container');
-        const toggleFormBtn = document.getElementById('toggle-form-btn');
-        const productAddSection = document.getElementById('product-add-section');
-        const toggleProfileBtn = document.getElementById('toggle-profile-btn');
-        const profileSection = document.getElementById('profile-section');
         const closeHelperBtn = document.getElementById('close-helper-btn');
         const helperText = document.getElementById('helper-text');
 
-        toggleFormBtn.addEventListener('click', () => {
-            productAddSection.classList.toggle('open');
-        });
-        toggleProfileBtn.addEventListener('click', () => {
-            profileSection.classList.toggle('open');
-        });
         closeHelperBtn.addEventListener('click', () => {
             helperText.style.display = 'none';
         });
@@ -1046,12 +1004,15 @@
         let currentTab = 'sale';
 
         const formatCurrency = (number) => {
-            const safeValue = Number.isFinite(number) ? number : 0;
+            const safeValue = Number.isFinite(number) ?
+            number : 0;
             return '$' + pesosFormatter.format(Math.trunc(safeValue));
         };
 
         const parseFromString = (value) => {
-            if (!value && value !== 0) return 0;
+            if (!value && value !== 0) {
+                return 0;
+            }
 
             const normalized = value
                 .toString()
@@ -1063,15 +1024,28 @@
             return Number.isFinite(parsed) ? parsed : 0;
         };
         const getNumericValue = (input) => {
-            if (input === null || input === undefined) return 0;
-            if (typeof input === 'number') return Number.isFinite(input) ? input : 0;
-            if (typeof input === 'string') return parseFromString(input);
+            if (input === null || input === undefined) {
+                return 0;
+            }
+
+            if (typeof input === 'number') {
+                return Number.isFinite(input) ?
+                input : 0;
+            }
+
+            if (typeof input === 'string') {
+                return parseFromString(input);
+            }
 
             const direct = input.valueAsNumber;
-            if (!Number.isNaN(direct)) return direct;
+            if (!Number.isNaN(direct)) {
+                return direct;
+            }
+
             if (typeof input.value === 'string' || typeof input.value === 'number') {
                 return parseFromString(input.value);
             }
+
             return 0;
         };
         const uniqueId = (prefix) => {
@@ -1120,7 +1094,9 @@
         const loadState = () => {
             try {
                 const stored = localStorage.getItem(STORAGE_KEY);
-                if (!stored) return createDefaultState();
+                if (!stored) {
+                    return createDefaultState();
+                }
 
                 const parsed = JSON.parse(stored);
                 if (!parsed || typeof parsed !== 'object' || !parsed.profiles) {
@@ -1132,20 +1108,27 @@
                     const profileId = profile.id || uniqueId('profile');
                     safeProfiles[profileId] = {
                         id: profileId,
-                        name: sanitizeText(profile.name, 'Perfil'),
+                        name: sanitizeText(profile.name, 
+                        'Perfil'),
                         products: Array.isArray(profile.products)
                             ? profile.products.map(item => normalizeProduct(item, profile.name))
                             : []
+              
                     };
                 });
-                if (!Object.keys(safeProfiles).length) return createDefaultState();
+                if (!Object.keys(safeProfiles).length) {
+                    return createDefaultState();
+                }
 
                 let activeProfileId = parsed.activeProfileId;
                 if (!activeProfileId || !safeProfiles[activeProfileId]) {
                     activeProfileId = Object.keys(safeProfiles)[0];
                 }
 
-                return { profiles: safeProfiles, activeProfileId };
+                return {
+                    profiles: safeProfiles,
+                    activeProfileId
+                };
             } catch (error) {
                 console.warn('No se pudo leer localStorage', error);
                 return createDefaultState();
@@ -1170,6 +1153,7 @@
                     <th style="width: 30%;">Producto</th>
                     <th style="width: 18%;">${config.priceLabel}</th>
                     <th style="width: 20%;">${config.qtyLabel}</th>
+                
                     <th style="width: 20%; text-align: right;">${config.totalLabel}</th>
                     <th style="width: 12%; text-align: right;">Acciones</th>
                 </tr>
@@ -1187,16 +1171,19 @@
                 salesTotal += saleSubtotal;
                 purchaseTotal += buySubtotal;
                 unitsSold += product.sellQty;
+  
                 unitsBuy += product.buyQty;
 
                 const row = productList.querySelector(`[data-id="${product.id}"]`);
                 if (row) {
                     const totalCell = row.querySelector('.total-cell');
                     if (totalCell) {
+  
                         const subtotal = currentTab === 'sale' ? saleSubtotal : buySubtotal;
                         totalCell.textContent = formatCurrency(subtotal);
                     }
                 }
+       
             });
 
             const profit = salesTotal - purchaseTotal;
@@ -1268,7 +1255,8 @@
             totalCell.dataset.label = config.totalLabel;
             totalCell.className = 'result-cell total-cell';
             const subtotal = currentTab === 'sale'
-                ? product.sellPrice * product.sellQty
+                ?
+                product.sellPrice * product.sellQty
                 : product.buyPrice * product.buyQty;
             totalCell.textContent = formatCurrency(subtotal);
 
@@ -1326,22 +1314,33 @@
         const handleProductInput = (event) => {
             const target = event.target;
             const row = target.closest('.product-row');
-            if (!row) return;
+            if (!row) {
+                return;
+            }
 
             const product = products.find(item => item.id === row.dataset.id);
-            if (!product) return;
+            if (!product) {
+                return;
+            }
 
-            // CORREGIDO: No forzar target.value para evitar saltos en teclado Android/Xiaomi
             if (target.classList.contains('name-input')) {
                 product.name = target.value.slice(0, 40);
             } else if (target.classList.contains('sell-price-input')) {
-                product.sellPrice = safeInteger(target);
+                const value = safeInteger(target);
+                product.sellPrice = value;
+                target.value = value;
             } else if (target.classList.contains('buy-price-input')) {
-                product.buyPrice = safeInteger(target);
+                const value = safeInteger(target);
+                product.buyPrice = value;
+                target.value = value;
             } else if (target.classList.contains('sell-qty-input')) {
-                product.sellQty = safeInteger(target);
+                const value = safeInteger(target);
+                product.sellQty = value;
+                target.value = value;
             } else if (target.classList.contains('buy-qty-input')) {
-                product.buyQty = safeInteger(target);
+                const value = safeInteger(target);
+                product.buyQty = value;
+                target.value = value;
             }
 
             calculateTotals();
@@ -1349,14 +1348,20 @@
         };
 
         const handleDeleteProduct = (event) => {
-            if (!event.target.classList.contains('delete-product-btn')) return;
+            if (!event.target.classList.contains('delete-product-btn')) {
+                return;
+            }
 
             const row = event.target.closest('.product-row');
-            if (!row) return;
+            if (!row) {
+                return;
+            }
 
             const product = products.find(item => item.id === row.dataset.id);
             const confirmDelete = confirm(`¿Eliminar "${product?.name || 'producto'}"?`);
-            if (!confirmDelete) return;
+            if (!confirmDelete) {
+                return;
+            }
 
             const index = products.findIndex(item => item.id === row.dataset.id);
             if (index !== -1) {
@@ -1366,7 +1371,6 @@
             persistState();
             showToast('Producto eliminado', 'trash');
         };
-
         const addProduct = (event) => {
             event.preventDefault();
             const nameValue = nameInput.value.trim();
@@ -1382,7 +1386,8 @@
                 name: nameValue,
                 buyPrice: buyPriceValue,
                 sellPrice: sellPriceValue,
-                buyQty: 0,
+                buyQty: 
+                0,
                 sellQty: 0
             }, nameValue);
             products.push(newProduct);
@@ -1392,11 +1397,13 @@
             persistState();
             showToast('Producto añadido correctamente', 'check-circle');
         };
-
         const clearMemory = () => {
-            const profileName = getActiveProfile()?.name || 'este perfil';
+            const profileName = getActiveProfile()?.name ||
+            'este perfil';
             const confirmation = confirm(`Vas a borrar toda la memoria y dejar todo en 0 dentro de "${profileName}". ¿Quieres continuar?`);
-            if (!confirmation) return;
+            if (!confirmation) {
+                return;
+            }
 
             products.length = 0;
             renderProducts();
@@ -1405,7 +1412,9 @@
         };
 
         const switchTab = (newTab) => {
-            if (!TAB_CONFIG[newTab] || currentTab === newTab) return;
+            if (!TAB_CONFIG[newTab] || currentTab === newTab) {
+                return;
+            }
 
             currentTab = newTab;
             tabButtons.forEach(button => {
@@ -1429,18 +1438,21 @@
 
         const handleProfileChange = (event) => {
             const newProfileId = event.target.value;
-            if (!newProfileId || !appState.profiles[newProfileId]) return;
+            if (!newProfileId || !appState.profiles[newProfileId]) {
+                return;
+            }
 
             appState.activeProfileId = newProfileId;
             syncProductsReference();
             renderProducts();
             persistState();
         };
-
         const handleNewProfile = () => {
             const suggestion = `Perfil ${Object.keys(appState.profiles).length + 1}`;
             const name = prompt('Nombre para el nuevo perfil (ej: Venta concierto)', suggestion);
-            if (!name) return;
+            if (!name) {
+                return;
+            }
 
             const profile = createProfile(name);
             appState.profiles[profile.id] = profile;
@@ -1451,7 +1463,6 @@
             persistState();
             showToast(`Perfil "${name}" creado`, 'user-plus');
         };
-
         const handleEditProfile = () => {
             const activeProfile = getActiveProfile();
             if (!activeProfile) return;
@@ -1463,7 +1474,6 @@
             persistState();
             showToast('Nombre de perfil actualizado', 'pencil-simple');
         };
-
         const handleDeleteProfile = () => {
             const profileIds = Object.keys(appState.profiles);
             if (profileIds.length <= 1) {
@@ -1477,6 +1487,7 @@
             }
 
             delete appState.profiles[appState.activeProfileId];
+            // Switch to the first available profile
             appState.activeProfileId = Object.keys(appState.profiles)[0];
             syncProductsReference();
             renderProfileOptions();
@@ -1511,3 +1522,4 @@
 
 </body>
 </html>
+
