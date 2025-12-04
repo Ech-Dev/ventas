@@ -37,11 +37,8 @@
             background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 100%);
             background-attachment: fixed;
             margin: 0;
-            
-            /* CORRECCIÓN 2: Altura dinámica para móviles */
             min-height: 100vh;
             min-height: 100dvh; 
-
             padding: 40px 20px 80px;
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
@@ -588,7 +585,7 @@
 
             .summary-panel {
                 position: static;
-                order: -1; /* Show summary on top on mobile */
+                order: -1;
             }
             
             .form-grid {
@@ -966,13 +963,11 @@
             sale: {
                 key: 'sale',
                 priceField: 'sellPrice',
-   
                 qtyField: 'sellQty',
                 priceLabel: 'Precio venta ($)',
                 qtyLabel: 'Vendí (Cant.)',
                 totalLabel: 'Total venta ($)',
                 priceClass: 'sell-price-input',
-             
                 qtyClass: 'sell-qty-input'
             },
             buy: {
@@ -980,7 +975,6 @@
                 priceField: 'buyPrice',
                 qtyField: 'buyQty',
                 priceLabel: 'Precio compra ($)',
- 
                 qtyLabel: 'Compré (Cant.)',
                 totalLabel: 'Total compra ($)',
                 priceClass: 'buy-price-input',
@@ -1052,15 +1046,12 @@
         let currentTab = 'sale';
 
         const formatCurrency = (number) => {
-            const safeValue = Number.isFinite(number) ?
-            number : 0;
+            const safeValue = Number.isFinite(number) ? number : 0;
             return '$' + pesosFormatter.format(Math.trunc(safeValue));
         };
 
         const parseFromString = (value) => {
-            if (!value && value !== 0) {
-                return 0;
-            }
+            if (!value && value !== 0) return 0;
 
             const normalized = value
                 .toString()
@@ -1072,28 +1063,15 @@
             return Number.isFinite(parsed) ? parsed : 0;
         };
         const getNumericValue = (input) => {
-            if (input === null || input === undefined) {
-                return 0;
-            }
-
-            if (typeof input === 'number') {
-                return Number.isFinite(input) ?
-                input : 0;
-            }
-
-            if (typeof input === 'string') {
-                return parseFromString(input);
-            }
+            if (input === null || input === undefined) return 0;
+            if (typeof input === 'number') return Number.isFinite(input) ? input : 0;
+            if (typeof input === 'string') return parseFromString(input);
 
             const direct = input.valueAsNumber;
-            if (!Number.isNaN(direct)) {
-                return direct;
-            }
-
+            if (!Number.isNaN(direct)) return direct;
             if (typeof input.value === 'string' || typeof input.value === 'number') {
                 return parseFromString(input.value);
             }
-
             return 0;
         };
         const uniqueId = (prefix) => {
@@ -1142,9 +1120,7 @@
         const loadState = () => {
             try {
                 const stored = localStorage.getItem(STORAGE_KEY);
-                if (!stored) {
-                    return createDefaultState();
-                }
+                if (!stored) return createDefaultState();
 
                 const parsed = JSON.parse(stored);
                 if (!parsed || typeof parsed !== 'object' || !parsed.profiles) {
@@ -1156,27 +1132,20 @@
                     const profileId = profile.id || uniqueId('profile');
                     safeProfiles[profileId] = {
                         id: profileId,
-                        name: sanitizeText(profile.name, 
-                        'Perfil'),
+                        name: sanitizeText(profile.name, 'Perfil'),
                         products: Array.isArray(profile.products)
                             ? profile.products.map(item => normalizeProduct(item, profile.name))
                             : []
-              
                     };
                 });
-                if (!Object.keys(safeProfiles).length) {
-                    return createDefaultState();
-                }
+                if (!Object.keys(safeProfiles).length) return createDefaultState();
 
                 let activeProfileId = parsed.activeProfileId;
                 if (!activeProfileId || !safeProfiles[activeProfileId]) {
                     activeProfileId = Object.keys(safeProfiles)[0];
                 }
 
-                return {
-                    profiles: safeProfiles,
-                    activeProfileId
-                };
+                return { profiles: safeProfiles, activeProfileId };
             } catch (error) {
                 console.warn('No se pudo leer localStorage', error);
                 return createDefaultState();
@@ -1201,7 +1170,6 @@
                     <th style="width: 30%;">Producto</th>
                     <th style="width: 18%;">${config.priceLabel}</th>
                     <th style="width: 20%;">${config.qtyLabel}</th>
-                
                     <th style="width: 20%; text-align: right;">${config.totalLabel}</th>
                     <th style="width: 12%; text-align: right;">Acciones</th>
                 </tr>
@@ -1219,19 +1187,16 @@
                 salesTotal += saleSubtotal;
                 purchaseTotal += buySubtotal;
                 unitsSold += product.sellQty;
-  
                 unitsBuy += product.buyQty;
 
                 const row = productList.querySelector(`[data-id="${product.id}"]`);
                 if (row) {
                     const totalCell = row.querySelector('.total-cell');
                     if (totalCell) {
-  
                         const subtotal = currentTab === 'sale' ? saleSubtotal : buySubtotal;
                         totalCell.textContent = formatCurrency(subtotal);
                     }
                 }
-       
             });
 
             const profit = salesTotal - purchaseTotal;
@@ -1303,8 +1268,7 @@
             totalCell.dataset.label = config.totalLabel;
             totalCell.className = 'result-cell total-cell';
             const subtotal = currentTab === 'sale'
-                ?
-                product.sellPrice * product.sellQty
+                ? product.sellPrice * product.sellQty
                 : product.buyPrice * product.buyQty;
             totalCell.textContent = formatCurrency(subtotal);
 
@@ -1362,33 +1326,22 @@
         const handleProductInput = (event) => {
             const target = event.target;
             const row = target.closest('.product-row');
-            if (!row) {
-                return;
-            }
+            if (!row) return;
 
             const product = products.find(item => item.id === row.dataset.id);
-            if (!product) {
-                return;
-            }
+            if (!product) return;
 
+            // CORREGIDO: No forzar target.value para evitar saltos en teclado Android/Xiaomi
             if (target.classList.contains('name-input')) {
                 product.name = target.value.slice(0, 40);
             } else if (target.classList.contains('sell-price-input')) {
-                const value = safeInteger(target);
-                product.sellPrice = value;
-                target.value = value;
+                product.sellPrice = safeInteger(target);
             } else if (target.classList.contains('buy-price-input')) {
-                const value = safeInteger(target);
-                product.buyPrice = value;
-                target.value = value;
+                product.buyPrice = safeInteger(target);
             } else if (target.classList.contains('sell-qty-input')) {
-                const value = safeInteger(target);
-                product.sellQty = value;
-                target.value = value;
+                product.sellQty = safeInteger(target);
             } else if (target.classList.contains('buy-qty-input')) {
-                const value = safeInteger(target);
-                product.buyQty = value;
-                target.value = value;
+                product.buyQty = safeInteger(target);
             }
 
             calculateTotals();
@@ -1396,20 +1349,14 @@
         };
 
         const handleDeleteProduct = (event) => {
-            if (!event.target.classList.contains('delete-product-btn')) {
-                return;
-            }
+            if (!event.target.classList.contains('delete-product-btn')) return;
 
             const row = event.target.closest('.product-row');
-            if (!row) {
-                return;
-            }
+            if (!row) return;
 
             const product = products.find(item => item.id === row.dataset.id);
             const confirmDelete = confirm(`¿Eliminar "${product?.name || 'producto'}"?`);
-            if (!confirmDelete) {
-                return;
-            }
+            if (!confirmDelete) return;
 
             const index = products.findIndex(item => item.id === row.dataset.id);
             if (index !== -1) {
@@ -1419,6 +1366,7 @@
             persistState();
             showToast('Producto eliminado', 'trash');
         };
+
         const addProduct = (event) => {
             event.preventDefault();
             const nameValue = nameInput.value.trim();
@@ -1434,8 +1382,7 @@
                 name: nameValue,
                 buyPrice: buyPriceValue,
                 sellPrice: sellPriceValue,
-                buyQty: 
-                0,
+                buyQty: 0,
                 sellQty: 0
             }, nameValue);
             products.push(newProduct);
@@ -1445,13 +1392,11 @@
             persistState();
             showToast('Producto añadido correctamente', 'check-circle');
         };
+
         const clearMemory = () => {
-            const profileName = getActiveProfile()?.name ||
-            'este perfil';
+            const profileName = getActiveProfile()?.name || 'este perfil';
             const confirmation = confirm(`Vas a borrar toda la memoria y dejar todo en 0 dentro de "${profileName}". ¿Quieres continuar?`);
-            if (!confirmation) {
-                return;
-            }
+            if (!confirmation) return;
 
             products.length = 0;
             renderProducts();
@@ -1460,9 +1405,7 @@
         };
 
         const switchTab = (newTab) => {
-            if (!TAB_CONFIG[newTab] || currentTab === newTab) {
-                return;
-            }
+            if (!TAB_CONFIG[newTab] || currentTab === newTab) return;
 
             currentTab = newTab;
             tabButtons.forEach(button => {
@@ -1486,21 +1429,18 @@
 
         const handleProfileChange = (event) => {
             const newProfileId = event.target.value;
-            if (!newProfileId || !appState.profiles[newProfileId]) {
-                return;
-            }
+            if (!newProfileId || !appState.profiles[newProfileId]) return;
 
             appState.activeProfileId = newProfileId;
             syncProductsReference();
             renderProducts();
             persistState();
         };
+
         const handleNewProfile = () => {
             const suggestion = `Perfil ${Object.keys(appState.profiles).length + 1}`;
             const name = prompt('Nombre para el nuevo perfil (ej: Venta concierto)', suggestion);
-            if (!name) {
-                return;
-            }
+            if (!name) return;
 
             const profile = createProfile(name);
             appState.profiles[profile.id] = profile;
@@ -1511,6 +1451,7 @@
             persistState();
             showToast(`Perfil "${name}" creado`, 'user-plus');
         };
+
         const handleEditProfile = () => {
             const activeProfile = getActiveProfile();
             if (!activeProfile) return;
@@ -1522,6 +1463,7 @@
             persistState();
             showToast('Nombre de perfil actualizado', 'pencil-simple');
         };
+
         const handleDeleteProfile = () => {
             const profileIds = Object.keys(appState.profiles);
             if (profileIds.length <= 1) {
@@ -1535,7 +1477,6 @@
             }
 
             delete appState.profiles[appState.activeProfileId];
-            // Switch to the first available profile
             appState.activeProfileId = Object.keys(appState.profiles)[0];
             syncProductsReference();
             renderProfileOptions();
@@ -1570,4 +1511,3 @@
 
 </body>
 </html>
-
